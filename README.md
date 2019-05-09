@@ -1,6 +1,6 @@
 # Pomo cmd
 
-Implementation of pomodoto tecnics in shell script 
+Implementation of the pomodoro technique in shell script
 
 ## Getting Started
 
