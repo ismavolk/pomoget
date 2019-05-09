@@ -32,32 +32,32 @@ function pomodoro()
 
     if [ "${1}" == "-r" ]; then
         echo 1 > $pomoCounterFile;
-        echo "contador do pomodoro reiniciado"
+        echo "Pomodoro counter reseted"
         return;
     fi
 
     if [ "${1}" == "--help" ] || [ "${1}" == "-h" ] || [ "${1}" == "?" ]; then
-        echo "whitout arguments starts pomodoro and start break after pomodoro finish";
-        echo "-o [O]nly start pomodoro without break after pomodoro end";
+        echo "Without any argument start the pomodoro and at the end starts the break(short or long based on completed pomodoros <= 4 short > 4 long)";
+        echo "-w Start pomodoro [w]ithout break after pomodoro finishes";
         echo "-r [R]eset pomodoro counter";
-        echo "-b start [B]reak(short or long) based on completed pomodoro counter";
+        echo "-b start [B]reak(short or long based on completed pomodoros <=4 short >4 long)";
         echo "-sb start [S]hort [B]reak";
         echo "-lb start [L]ong [B]reak";
         return;
     fi
 
-    if [ "${1}" == "" ] || [ "${1}" == "-o" ]; then
-        echo "--- pomodoro ${pomodoroCounter} (concluídos: $((pomodoroCounter-1))) ---";
+    if [ "${1}" == "" ] || [ "${1}" == "-w" ]; then
+        echo "--- pomodoro ${pomodoroCounter} (completed: $((pomodoroCounter-1))) ---";
 #        0timer 1
         0timer $((25*60)); # 25 minutos de pomodoro
 
-        ( xmessage "--- pomodoro ${pomodoroCounter} finalizado ---" & ) > /dev/null 2>&1;
+        ( xmessage "--- pomodoro ${pomodoroCounter} finished ---" & ) > /dev/null 2>&1;
         aplay -q "$soundFile";
 
         pomodoroCounter=$((pomodoroCounter+1));
         echo $pomodoroCounter > $pomoCounterFile;
 
-        if [ "${1}" == "-o" ]; then
+        if [ "${1}" == "-w" ]; then
             return;
         fi
 
@@ -74,14 +74,14 @@ function pomodoro()
 
             0timer $((5*60)); # 5 minutos de descanso
 
-            ( xmessage "--- Fim do descanso, vai trabalhar vagabundo! ---" & ) > /dev/null 2>&1;
+            ( xmessage "--- End of the rest, to work! ---" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
         elif [ "${1}" == "-lb" ]; then
             echo "--- long break ---";
 
             0timer $((15*60)); # após 5 pomodoros, 15 minutos de descanso
 
-            ( xmessage "--- Fim do descanso, vai trabalhar vagabundo! ---" & ) > /dev/null 2>&1;
+            ( xmessage "--- End of the rest, to work! ---" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
         fi
 
