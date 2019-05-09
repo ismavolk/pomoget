@@ -44,7 +44,7 @@ You can use arguments
 
 ## Author
 
-* ** Ismael Machado ** - (https://github.com/pomo-cmd)
+* ** Ismael Machado ** - (https://github.com/ismavolk/pomo-cmd)
 
 ## License
 
