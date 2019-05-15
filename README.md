@@ -8,12 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Depends on 'aplay' and xmessage
-
-```
-sudo apt-get install aplay
-sudo apt-get install xmessage
-```
+Depends on 'aplay' and 'xmessage' (pre installed on ubuntu)
 
 ### Installing
 
