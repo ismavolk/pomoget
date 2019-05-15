@@ -1,4 +1,4 @@
-# Pomo cmd
+# pomoget
 
 Implementation of the pomodoro technique in shell script
 
@@ -19,17 +19,17 @@ sudo apt-get install xmessage
 
 Unzip 
 ```
-unzip pomo-cmd.zip
+unzip pomoget.zip
 ```
 
 Enter 
 ```
-cd pomo-cmd
+cd pomoget
 ```
 
 Run
 ```
-./pomo
+./pomoget
 ```
 
 ##
