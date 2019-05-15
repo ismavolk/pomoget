@@ -13,13 +13,31 @@ function pomoTimer()
     if [ "${1}" == "--help" ] || [ "${1}" == "-h" ] || [ "${1}" == "?" ] || [ "${1}" == "" ]; then
         echo "uso: pomoTimer $((25*60)) && xmessage \"O pomodoro terminou\""
     else
+        time=$1;
         date0=$((`date +%s`));
-        date1=$((`date +%s` + $1));
-        totalTime=$(date -u --date @$(($1)) +%M:%S);
-        secsTot=$(date -u --date @$(($1)) +%s);
+        date1=$((`date +%s` + $time));
+        totalTime=$(date -u --date @$(($time)) +%M:%S);
+        secsTot=$(date -u --date @$(($time)) +%s);
         progressBarSize=50;
+        pomoTypeStr=$2; #pode ser pomodoro, short break ou long break
+        completedPomodoroCounter=$3;
 
         LC_NUMERIC="en_US.UTF-8";
+
+        echo "--`date +"%Y-%m-%d %H:%M:%S"`--  $pomoTypeStr ($totalTime)";
+
+        echo -n "Completed pomodoros: $completedPomodoroCounter";
+
+        if [ $completedPomodoroCounter -gt 0 ]; then
+            j=0
+            while [ $j -lt $completedPomodoroCounter ]; do
+                echo -ne " \U1F345";
+                j=$(( j + 1 ))
+            done
+        fi
+        echo "";
+        echo "running: $pomoTypeStr ($totalTime)"
+        echo "";
 
         while [ "$date1" -ge `date +%s` ]; do
             reverseTime=$(date -u --date @$(($date1 - `date +%s`)) +%M:%S);
@@ -58,16 +76,21 @@ function pomoTimer()
 #                pomoImgBlink="\U1F345";
 #            fi
 
-            echo -ne "$2: $timeElapsed $perc%[$strProgress] -$reverseTime / $totalTime\r";
+            echo -ne "$pomoTypeStr $timeElapsed $perc%[$strProgress] -$reverseTime \r";
 
             sleep 1
         done
+
+        echo "";
+        echo "";
+        echo "`date +"%Y-%m-%d %H:%M:%S"`  - finished: $pomoTypeStr [$timeElapsed/$totalTime]";
+        echo "";
     fi
 }
 
-function pomodoro()
+function pomoget()
 {
-    clear;
+#    clear;
 
     # se o arquivo contador não existe, cria ele
     if [ ! -f $pomoCounterFile ]; then
@@ -89,24 +112,13 @@ function pomodoro()
         echo "-b start [B]reak(short or long based on completed pomodoros <=4 short >4 long)";
         echo "-sb start [S]hort [B]reak";
         echo "-lb start [L]ong [B]reak";
+        echo "-c [C]ontinue interrupted pomodoro (not implemented)";
         return;
     fi
 
-    echo -n "Completed: $completedPomodoroCounter";
-    if [ $completedPomodoroCounter -gt 0 ]; then
-
-        j=0
-        while [ $j -lt $completedPomodoroCounter ]; do
-            echo -ne " \U1F345 ";
-            j=$(( j + 1 ))
-        done
-    fi
-
-    echo "";
-
     if [ "${1}" == "" ] || [ "${1}" == "-w" ]; then
 #        pomoTimer 1
-        pomoTimer $((25*60)) "Pomodoro";
+        pomoTimer $((25*60)) "Pomodoro" $completedPomodoroCounter;
 
         ( xmessage "### pomodoro $((completedPomodoroCounter+1)) finished ###" & ) > /dev/null 2>&1;
         aplay -q "$soundFile";
@@ -118,21 +130,21 @@ function pomodoro()
             return;
         fi
 
-        pomodoro -b; # inicia o contador de tempo de descanso imediatamente
+        pomoget -b; # inicia o contador de tempo de descanso imediatamente
     else
         if [ "${1}" == "-b" ]; then
             if [ $completedPomodoroCounter -lt 4 ]; then
-                pomodoro -sb; # 5 minutos de descanso
+                pomoget -sb; # 5 minutos de descanso
             else
-                pomodoro -lb; # após 5 pomodoros, 15 minutos de descanso
+                pomoget -lb; # após 5 pomodoros, 15 minutos de descanso
             fi
         elif [ "${1}" == "-sb" ]; then
-            pomoTimer $((5*60)) "Short break"; # 5 minutos de descanso
+            pomoTimer $((5*60)) "Short break" $completedPomodoroCounter; # 5 minutos de descanso
 
             ( xmessage "### End of the rest, to work! ###" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
         elif [ "${1}" == "-lb" ]; then
-            pomoTimer $((15*60)) "Long break"; # após 5 pomodoros, 15 minutos de descanso
+            pomoTimer $((15*60)) "Long break" $completedPomodoroCounter; # após 5 pomodoros, 15 minutos de descanso
 
             ( xmessage "### End of the rest, to work! ###" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
@@ -141,4 +153,4 @@ function pomodoro()
     fi
 }
 
-pomodoro $1;
+pomoget $1;
