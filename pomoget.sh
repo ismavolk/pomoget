@@ -24,9 +24,12 @@ function pomoTimer()
 
         LC_NUMERIC="en_US.UTF-8";
 
-        echo "--`date +"%Y-%m-%d %H:%M:%S"`--  $pomoTypeStr ($totalTime)";
+        printf '%s \033[38;5;9m %s \033[0m\n' "-- `date +"%Y-%m-%d %H:%M:%S"` --" "$pomoTypeStr Running ($totalTime)";
 
-        echo -n "Completed pomodoros: $completedPomodoroCounter";
+        #printf 'here is text with \033[38;5;9m color \033[0m and  without\n'
+
+#        echo -n "Completed pomodoros: $completedPomodoroCounter";
+        printf 'Completed pomodoros: \033[38;5;9m%s\033[0m' $completedPomodoroCounter;
 
         if [ $completedPomodoroCounter -gt 0 ]; then
             j=0
@@ -35,8 +38,7 @@ function pomoTimer()
                 j=$(( j + 1 ))
             done
         fi
-        echo "";
-        echo "running: $pomoTypeStr ($totalTime)"
+
         echo "";
 
         while [ "$date1" -ge `date +%s` ]; do
@@ -60,15 +62,10 @@ function pomoTimer()
                 let len=len+1;
             done
 
+#            strProgress=$strProgress">";
 
-            strProgress=$strProgress">";
-
-            len=`echo ${#strProgress}`
-            while [ $len -lt $progressBarSize ];
-            do
-                strProgress=$strProgress" ";
-                let len=len+1;
-            done
+            #2, 28, 34, 128, 154
+#            strProgress=$strProgress`printf '\033[38;5;9m=\033[0m\033[38;5;34m>\033[0m'`;
             # /progress bar
 
 #            pomoImgBlink="  ";
@@ -76,14 +73,16 @@ function pomoTimer()
 #                pomoImgBlink="\U1F345";
 #            fi
 
-            echo -ne "$pomoTypeStr $timeElapsed $perc%[$strProgress] -$reverseTime \r";
+#            echo -ne "$pomoTypeStr $timeElapsed $perc%[$strProgress] -$reverseTime \r";
+#            pad=$(printf '%*s' "$progressBarSize");
+            printf '\033[38;5;9m%s\033[0m %s %s[%-*s] %s\r' "$pomoTypeStr" "$timeElapsed" "$perc%" $progressBarSize "$strProgress>" "-$reverseTime";
 
             sleep 1
         done
 
         echo "";
         echo "";
-        echo "`date +"%Y-%m-%d %H:%M:%S"`  - finished: $pomoTypeStr [$timeElapsed/$totalTime]";
+        echo "`date +"%Y-%m-%d %H:%M:%S"`  -  $pomoTypeStr finished [$timeElapsed/$totalTime]";
         echo "";
     fi
 }
@@ -118,7 +117,7 @@ function pomoget()
 
     if [ "${1}" == "" ] || [ "${1}" == "-w" ]; then
 #        pomoTimer 1
-        pomoTimer $((25*60)) "Pomodoro" $completedPomodoroCounter;
+        pomoTimer $((25*60)) "POMODORO" $completedPomodoroCounter;
 
         ( xmessage "### pomodoro $((completedPomodoroCounter+1)) finished ###" & ) > /dev/null 2>&1;
         aplay -q "$soundFile";
@@ -139,12 +138,12 @@ function pomoget()
                 pomoget -lb; # após 5 pomodoros, 15 minutos de descanso
             fi
         elif [ "${1}" == "-sb" ]; then
-            pomoTimer $((5*60)) "Short break" $completedPomodoroCounter; # 5 minutos de descanso
+            pomoTimer $((5*60)) "SHORT BREAK" $completedPomodoroCounter; # 5 minutos de descanso
 
             ( xmessage "### End of the rest, to work! ###" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
         elif [ "${1}" == "-lb" ]; then
-            pomoTimer $((15*60)) "Long break" $completedPomodoroCounter; # após 5 pomodoros, 15 minutos de descanso
+            pomoTimer $((15*60)) "LONG BREAK" $completedPomodoroCounter; # após 5 pomodoros, 15 minutos de descanso
 
             ( xmessage "### End of the rest, to work! ###" & ) > /dev/null 2>&1;
             aplay -q "$soundFile";
