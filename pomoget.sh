@@ -95,7 +95,6 @@ function pomoget()
     completedPomodoroCounter=`cat ${pomoCounterFile}`;
 
     if [ "${1}" == "-r" ]; then
-
         counter=0;
 
         if [ "${2}" != "" ]; then
@@ -103,7 +102,7 @@ function pomoget()
         fi
 
         echo $counter > $pomoCounterFile;
-        echo "Pomodoro counter reseted"
+        echo "Pomodoro counter(${completedPomodoroCounter}) reseted to ${counter}"
         return;
     fi
 
