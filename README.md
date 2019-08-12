@@ -1,6 +1,6 @@
-# pomoget
+# Pomo cmd
 
-Implementation of the pomodoro technique in shell script
+Implementation of pomodoto tecnics in shell script 
 
 ## Getting Started
 
@@ -8,23 +8,28 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Depends on 'aplay' and 'xmessage' (pre installed on ubuntu)
+Depends on 'aplay' and xmessage
+
+```
+sudo apt-get install aplay
+sudo apt-get install xmessage
+```
 
 ### Installing
 
 Unzip 
 ```
-unzip pomoget.zip
+unzip pomo-cmd.zip
 ```
 
 Enter 
 ```
-cd pomoget
+cd pomo-cmd
 ```
 
 Run
 ```
-./pomoget
+./pomo
 ```
 
 ##
@@ -39,7 +44,7 @@ You can use arguments
 
 ## Author
 
-* ** Ismael Machado ** - (https://github.com/ismavolk/pomo-cmd)
+* ** Ismael Machado ** - (https://github.com/pomo-cmd)
 
 ## License
 
